@@ -2,7 +2,9 @@ from flask import Flask , render_template, request, redirect , url_for , session
 from db import get_db_connection
 from werkzeug.security import generate_password_hash , check_password_hash
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app=Flask(__name__)
 app.secret_key= os.getenv("SECRET_KEY")
