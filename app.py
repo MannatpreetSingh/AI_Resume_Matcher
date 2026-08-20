@@ -3,6 +3,7 @@ from db import get_db_connection
 from werkzeug.security import generate_password_hash , check_password_hash
 import os
 from dotenv import load_dotenv
+from PyPDF2 import PdfReader 
 
 load_dotenv()
 
@@ -75,6 +76,33 @@ def logout():
     session.clear()
     
     return redirect(url_for("login"))
+
+@app.route("/upload",methods=["GET","POST"])
+def upload():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    if request.method == "POST":
+        file=request.files["resume"]
+        if file.filename=="":
+            return "no file selected"
+        if not file.filename.lower().endswith(".pdf"):
+            return "only PDF files are supported"
+    
+        filename = file.filename
+    
+        upload_folder = "uploads"
+    
+        os.makedirs(upload_folder,exist_ok=True)
+        file_path = os.path.join(upload_folder,filename)
+        file.save(file_path)
+    
+        reader =  PdfReader(file_path)
+    
+        text=""
+        for page in reader.pages:
+            text += page.extract_text() or ""
+        return f"<h2>Resume uploaded successfully!</h2><pre>{text}</pre>"
+    return render_template("upload.html")
 
 if __name__== "__main__":
      app.run(debug=True)
