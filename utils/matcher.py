@@ -24,7 +24,7 @@ SKILLS=[
     "numpy",
     "scikit-learn"   
 ]
-def extract_skills():
+def extract_skills(text):
     text=text.lower()
     found_skills=[]
     
@@ -43,7 +43,7 @@ def calculate_match(resume_text, job_description):
     for skills in job_skills:   
         
         if skills in resume_skills:
-                matched_skills.append(skill)
+                matched_skills.append(skills)
     missing_skill=[
         skill for skill in job_skills
         if skill not in resume_skills

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Resume</title>
 </head>
+
 <body>
     <h1>
         Upload Your Resume
@@ -14,8 +16,16 @@
         <br><br>
         <input type="file" name="resume" accept=".pdf" required>
         <br><br>
-        <button type="submit">Upload Resume</button>
+        <label>Job Description:</label>
+        <br><br>
+
+        <textarea name="job_description" rows="12" cols="60" placeholder="Paste the job description here..."
+            required></textarea>
+
+        <br><br>
+        <button type="submit">analyse Resume</button>
     </form>
     <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
 </body>
+
 </html>
