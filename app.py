@@ -84,6 +84,8 @@ def upload():
         return redirect(url_for("login"))
     if request.method == "POST":
         file=request.files["resume"]
+        job_description = request.form["job_description"]
+        
         if file.filename=="":
             return "no file selected"
         if not file.filename.lower().endswith(".pdf"):
@@ -102,7 +104,14 @@ def upload():
         text=""
         for page in reader.pages:
             text += page.extract_text() or ""
-        return f"<h2>Resume uploaded successfully!</h2><pre>{text}</pre>"
+        result = calculate_match(
+            text,
+            job_description
+            )
+        return render_template(
+            "result.html",
+        result=result
+        )
     return render_template("upload.html")
 
 if __name__== "__main__":
