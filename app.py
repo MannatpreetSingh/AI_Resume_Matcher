@@ -111,12 +111,13 @@ def upload():
         connection=get_db_connection()
         cursor=connection.cursor()
         
-        query="""
+        query = """
         INSERT INTO results(
-            user_id, job_description, match_percentage, matched_skills, missing_skills)
-            VALUES(%s, %s, %s, %s, %s)
-        )
-        """
+            user_id, job_description, match_percentage, matched_skills, missing_skills
+            )
+        VALUES(%s, %s, %s, %s, %s)
+            """
+
         cursor.execute(
             query,
             (
