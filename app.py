@@ -108,12 +108,36 @@ def upload():
             text,
             job_description
             )
+        connection=get_db_connection()
+        cursor=connection.cursor()
+        
+        query="""
+        INSERT INTO results(
+            user_id, job_description, match_percentage, matched_skills, missing_skills)
+            VALUES(%s, %s, %s, %s, %s)
+        )
+        """
+        cursor.execute(
+            query,
+            (
+                session["user_id"],
+                job_description,
+                result["match_percentage"],
+                ", ".join(result["matched_skills"]),
+                ", ".join(result["missing_skills"])
+            )
+        )
+        connection.commit()
+        
+        cursor.close()
+        connection.close
+        
         return render_template(
             "result.html",
         result=result
         )
     return render_template("upload.html")
 
-if __name__== "__main__":
-     app.run(debug=True)
+if __name__== "__main__":()
+app.run(debug=True)
      
