@@ -17,6 +17,46 @@
     <br>
     <a href="{{ url_for('upload') }}">Upload Resume</a>
     <br><br>
+    <h2>Previous Results</h2>
+  {% if results %}
+        {% for result in results %}
+    <div>
+        <h3>
+            Match : {{result.match_percentage }} %
+        </h3>
+        <p>
+            <strong>Job Description:</strong>
+            {{ result.job_description }}
+        </p>
+
+        <p>
+            <strong>Matched Skills:</strong>
+            {{ result.matched_skills }}
+        </p>
+
+        <p>
+            <strong>Missing Skills:</strong>
+            {{ result.missing_skills }}
+        </p>
+
+        <p>
+            <strong>Date:</strong>
+            {{ result.created_at }}
+        </p>
+
+        <hr>
+    </div>
+    {% endfor %}
+
+    {% else %}
+
+    <p>You don't have any previous results.</p>
+
+    {% endif %}
+
+    <br>
+
+
     <a href="{{ url_for('logout') }}">Logout</a>
 </body>
 

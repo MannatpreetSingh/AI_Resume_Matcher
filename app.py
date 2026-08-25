@@ -69,9 +69,11 @@ def dashboard():
         return redirect(url_for("login"))
     connection=get_db_connection()
     cursor=connection.cursor(dictionary=True)
-    query="""
-    SELECT * FROM results WHERE user_id = %s
-    ORDER BY created_at DESC    
+    query = """
+    SELECT *
+    FROM results
+    WHERE user_id = %s
+    ORDER BY created_at DESC
     """
     cursor.execute(query,(session["user_id"],))
     results=cursor.fetchall()
@@ -80,7 +82,8 @@ def dashboard():
     
     return render_template(
         "dashboard.html",
-        name=session["user_name"]
+        name=session["user_name"],
+        results=results
     )
 @app.route("/logout")
 def logout():
@@ -142,7 +145,7 @@ def upload():
         connection.commit()
         
         cursor.close()
-        connection.close
+        connection.close()
         
         return render_template(
             "result.html",
@@ -150,6 +153,6 @@ def upload():
         )
     return render_template("upload.html")
 
-if __name__== "__main__":()
-app.run(debug=True)
+if __name__== "__main__":
+    app.run(debug=True)
      
