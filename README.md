@@ -34,8 +34,8 @@ An AI-based web application that compares a user's resume with a job description
 - [x] Basic skill matching
 - [x] Job description input
 - [x] Match result page
-- [ ] Save analysis results to MySQL
-- [ ] Previous results dashboard
+- [x] Save analysis results to MySQL
+- [x] Previous results dashboard
 - [ ] Improve AI matching
 - [ ] Final UI
 - [ ] Deployment
