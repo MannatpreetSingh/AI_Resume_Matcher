@@ -67,6 +67,17 @@ def dashboard():
     
     if "user_id" not in session:
         return redirect(url_for("login"))
+    connection=get_db_connection()
+    cursor=connection.cursor(dictionary=True)
+    query="""
+    SELECT * FROM results WHERE user_id = %s
+    ORDER BY created_at DESC    
+    """
+    cursor.execute(query,(session["user_id"],))
+    results=cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
     return render_template(
         "dashboard.html",
         name=session["user_name"]
