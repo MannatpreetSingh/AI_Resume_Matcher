@@ -5,6 +5,8 @@ import os
 from utils.matcher import calculate_match
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader 
+from utils.matcher import calculate_match
+from utils.ai_matcher import calculate_similarity
 
 load_dotenv()
 
