@@ -15,20 +15,3 @@ def caluclate_similarity(resume_text , job_description):
     percentage = similarity[0][0]*100
     
     return round(percentage,2)
-
-
-if __name__ == "__main__":
-
-    resume = """
-    Python developer with experience in Flask,
-    MySQL, Git and web development.
-    """
-
-    job = """
-    We are looking for a Python developer with
-    Flask, MySQL and Git experience for web development.
-    """
-
-    result = caluclate_similarity(resume, job)
-
-    print("Similarity:", result, "%")

@@ -124,7 +124,7 @@ def upload():
             text,
             job_description
             )
-        similarity = calculate_similarity(
+        similarity = caluclate_similarity(
             text,
             job_description
             )
