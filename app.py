@@ -6,7 +6,7 @@ from utils.matcher import calculate_match
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader 
 from utils.matcher import calculate_match
-from utils.ai_matcher import calculate_similarity
+from utils.ai_matcher import caluclate_similarity
 
 load_dotenv()
 
@@ -120,10 +120,19 @@ def upload():
         text=""
         for page in reader.pages:
             text += page.extract_text() or ""
-        result = calculate_match(
+        skill_result = calculate_match(
             text,
             job_description
             )
+        similarity = calculate_similarity(
+            text,
+            job_description
+            )
+        result = {
+            "match_percentage": similarity,
+            "matched_skills": skill_result["matched_skills"],
+            "missing_skills": skill_result["missing_skills"]
+        }
         connection=get_db_connection()
         cursor=connection.cursor()
         
