@@ -128,6 +128,19 @@ def upload():
             text,
             job_description
             )
+        matched_count = len(skill_result["matched_skills"])
+        missing_count = len(skill_result["missing_skills"])
+        
+        total_skills = matched_count + missing_count
+        
+        if total_skills > 0:
+            skill_percentage = (matched_count / total_skills) * 100
+        else:
+            skill_percentage = 0
+            
+            final_score =(skill_percentage * 0.70
+            + similarity * 0.30
+                )   
         result = {
             "match_percentage": similarity,
             "matched_skills": skill_result["matched_skills"],
