@@ -1,37 +1,60 @@
-SKILLS=[
-    "python",
-    "java",
-    "c++",
-    "javascript",
-    "html",
-    "css",
-    "flask",
-    "django",
-    "mysql",
-    "sql",
-    "mongodb",
-    "git",
-    "github",
-    "docker",
-    "aws",
-    "react",
-    "node.js",
-    "php",
-    "laravel",
+SKILLS_ALIASES = {
+    "python": ["python", "python3"],
+
+    "flask": ["flask"],
+
+    "django": ["django"],
+
+    "mysql": ["mysql", "mysql database"],
+
+    "sql": ["sql", "structured query language"],
+
+    "html": ["html", "html5"],
+
+    "css": ["css", "css3"],
+
+    "javascript": ["javascript", "js"],
+
+    "react": ["react", "reactjs", "react.js"],
+
+    "node.js": ["node.js", "nodejs", "node"],
+
+    "git": ["git", "github", "gitlab"],
+
+    "docker": ["docker", "containerization"],
+
+    "aws": ["aws", "amazon web services"],
+
+"machine learning": [
     "machine learning",
-    "data analysis",
-    "pandas",
-    "numpy",
-    "scikit-learn"   
-]
+    "ml",
+    "machine-learning"
+],
+
+"scikit-learn": [
+    "scikit-learn",
+    "sklearn"
+],
+
+"pandas": ["pandas"],
+
+"numpy": ["numpy"],
+
+"java": ["java"],
+
+"c++": ["c++"],
+
+"php": ["php"]
+}
 def extract_skills(text):
     text=text.lower()
     found_skills=[]
     
-    for skill in SKILLS:
-        
-        if skill  in text:
-            found_skills.append(skill)
+    for skill, aliases in SKILLS_ALIASES.items():
+        for alias in aliases:
+            if alias in text:
+                found_skills.append(skill)
+                break
     return found_skills
     
 def calculate_match(resume_text, job_description):
