@@ -72,12 +72,13 @@ def calculate_match(resume_text, job_description):
         if skill not in resume_skills
     ]            
     if len(job_skills)==0:
-            match_percentage=0
+        match_percentage=0
     else:
         match_percentage=(
             len(matched_skills)/len(job_skills)
         )*100
-        return{
+        
+    return{
             "match_percentage": round(match_percentage,2),
             "matched_skills": matched_skills,
             "missing_skills": missing_skill
