@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
-
 from utils.matcher import calculate_match
 from utils.ai_matcher import caluclate_similarity
 
@@ -137,8 +137,11 @@ def upload():
 
         if not file.filename.lower().endswith(".pdf"):
             return "Only PDF files are supported"
+        
+        if not job_description.strip():
+            return "Job description cannot be empty"
 
-        filename = file.filename
+        filename = secure_filename(file.filename)
 
         upload_folder = "uploads"
 
