@@ -185,10 +185,13 @@ def upload():
                 skill_percentage = 0
 
                 
-            final_score = (
-                    skill_percentage * 0.70
-                    + similarity * 0.30
-                )
+            if skill_percentage == 100:
+                final_score = 100
+            else:
+                final_score = (
+                skill_percentage * 0.80
+                + similarity * 0.20
+            )
 
                 
             result = {
