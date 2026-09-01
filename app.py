@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from utils.matcher import calculate_match
 from utils.ai_matcher import caluclate_similarity
+import uuid
 
 
 load_dotenv()
@@ -142,12 +143,13 @@ def upload():
             return "Job description cannot be empty"
 
         filename = secure_filename(file.filename)
+        unique_filename = str(uuid.uuid4()) + "_" + filename
 
         upload_folder = "uploads"
 
         os.makedirs(upload_folder, exist_ok=True)
 
-        file_path = os.path.join(upload_folder, filename)
+        file_path = os.path.join(upload_folder, unique_filename)
 
         file.save(file_path)
 
