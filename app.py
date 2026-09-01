@@ -8,6 +8,7 @@ from PyPDF2 import PdfReader
 from utils.matcher import calculate_match
 from utils.ai_matcher import caluclate_similarity
 import uuid
+import mysql.connector
 
 
 load_dotenv()
@@ -40,7 +41,10 @@ def register():
         VALUES (%s, %s, %s)
         """
 
-        cursor.execute(query, (name, email, hashed_password))
+        cursor.execute(
+            query,
+            (name, email, hashed_password)
+        )
 
         connection.commit()
 
@@ -72,7 +76,10 @@ def login():
         cursor.close()
         connection.close()
 
-        if user and check_password_hash(user["password"], password):
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
 
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
@@ -100,7 +107,10 @@ def dashboard():
     ORDER BY created_at DESC
     """
 
-    cursor.execute(query, (session["user_id"],))
+    cursor.execute(
+        query,
+        (session["user_id"],)
+    )
 
     results = cursor.fetchall()
 
@@ -133,116 +143,172 @@ def upload():
         file = request.files["resume"]
         job_description = request.form["job_description"]
 
+       
         if file.filename == "":
             return "No file selected"
 
+       
         if not file.filename.lower().endswith(".pdf"):
             return "Only PDF files are supported"
+        
         
         if not job_description.strip():
             return "Job description cannot be empty"
 
+       
         filename = secure_filename(file.filename)
-        unique_filename = str(uuid.uuid4()) + "_" + filename
 
+        
+        unique_filename = (
+            str(uuid.uuid4()) + "_" + filename
+        )
+
+        
         upload_folder = "uploads"
 
-        os.makedirs(upload_folder, exist_ok=True)
+        os.makedirs(
+            upload_folder,
+            exist_ok=True
+        )
 
-        file_path = os.path.join(upload_folder, unique_filename)
+       
+        file_path = os.path.join(
+            upload_folder,
+            unique_filename
+        )
 
+       
         file.save(file_path)
 
-        reader = PdfReader(file_path)
+      
+        try:
 
-        text = ""
+            reader = PdfReader(file_path)
 
-        for page in reader.pages:
-            text += page.extract_text() or ""
+            text = ""
 
-            
-            skill_result = calculate_match(
-                text,
-                job_description
-            )
+            for page in reader.pages:
+                text += page.extract_text() or ""
 
-           
-            similarity = caluclate_similarity(
-                text,
-                job_description
-            )
+        except Exception as error:
 
-         
-            matched_count = len(skill_result["matched_skills"])
-            missing_count = len(skill_result["missing_skills"])
+            print("PDF error:", error)
 
-            total_skills = matched_count + missing_count
+            return (
+        "Unable to read this PDF. "
+        "Please upload a valid PDF file."
+    )
 
-            
-            if total_skills > 0:
+   
+        skill_result = calculate_match(
+        text,
+        job_description
+    )
 
-                skill_percentage = (
-                    matched_count / total_skills
-                ) * 100
+    
+        similarity = caluclate_similarity(
+        text,
+        job_description
+    )
 
-            else:
+   
+        matched_count = len(
+        skill_result["matched_skills"]
+    )
 
-                skill_percentage = 0
+        missing_count = len(
+        skill_result["missing_skills"]
+    )
 
-                
-            if skill_percentage == 100:
-                final_score = 100
-            else:
-                final_score = (
+        total_skills = (
+        matched_count + missing_count
+    )
+
+   
+        if total_skills > 0:
+
+            skill_percentage = (
+            matched_count / total_skills
+        ) * 100
+
+        else:
+
+            skill_percentage = 0
+
+       
+        if skill_percentage == 100:
+
+            final_score = 100
+
+        else:
+
+            final_score = (
                 skill_percentage * 0.80
                 + similarity * 0.20
             )
 
-                
-            result = {
+        result = {
+                "match_percentage": round(
+                    final_score,
+                    2
+                ),
+                "matched_skills":
+                    skill_result["matched_skills"],
+                    "missing_skills":
+                        skill_result["missing_skills"]
+                    }
 
-                    "match_percentage": round(final_score, 2),
+                   
+        try:
 
-                    "matched_skills": skill_result["matched_skills"],
+                        connection = get_db_connection()
+                        cursor = connection.cursor()
 
-                    "missing_skills": skill_result["missing_skills"]
-                }
+                        query = """
+                        INSERT INTO results
+                        (
+                            user_id,
+                            job_description,
+                            match_percentage,
+                            matched_skills,
+                            missing_skills
+                        )
+                        VALUES (%s, %s, %s, %s, %s)
+                        """
 
-                
-            connection = get_db_connection()
-            cursor = connection.cursor()
+                        cursor.execute(
+                            query,
+                            (
+                                session["user_id"],
+                                job_description,
+                                result["match_percentage"],
+                                ", ".join(
+                                    result["matched_skills"]
+                                ),
+                                ", ".join(
+                                    result["missing_skills"]
+                                )
+                            )
+                        )
 
-            query = """
-                INSERT INTO results(
-                    user_id,
-                    job_description,
-                    match_percentage,
-                    matched_skills,
-                    missing_skills
+                        connection.commit()
+
+                        cursor.close()
+                        connection.close()
+
+        except mysql.connector.Error as error:
+
+                        print("Database error:", error)
+
+                        return (
+                    "Unable to save your result. "
+                    "Please try again."
                 )
-                VALUES(%s, %s, %s, %s, %s)
-                """
-
-            cursor.execute(
-                    query,
-                    (
-                        session["user_id"],
-                        job_description,
-                        result["match_percentage"],
-                        ", ".join(result["matched_skills"]),
-                        ", ".join(result["missing_skills"])
-                    )
-                )
-
-            connection.commit()
-
-            cursor.close()
-            connection.close()
 
         return render_template(
-            "result.html",
-            result=result
-        )
+                    "result.html",
+                result=result
+                )
 
     return render_template("upload.html")
 
