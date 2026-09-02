@@ -1,44 +1,47 @@
 # AI Resume & Job-Fit Matcher
 
-An AI-based web application that compares a user's resume with a job description and shows a match percentage along with missing skills.
+AI Resume & Job-Fit Matcher is a Flask-based web application that analyzes a resume against a job description and calculates how well the resume matches the job requirements.
 
 ## Features
 
 - User registration and login
-- Resume PDF upload
+- Secure password hashing
+- Resume upload in PDF format
+- Job description input
 - Resume text extraction
-- Job description analysis
-- Resume and job skill comparison
-- Match percentage
-- Missing skills detection
-- Save previous results
+- Automatic skill detection
+- Matched skills identification
+- Missing skills identification
+- Resume-job match percentage
+- TF-IDF and cosine similarity analysis
+- Combined matching score
+- Save previous analysis results
+- User dashboard
+- Logout functionality
+- Responsive and modern UI
 
-## Tech Stack
+## Technologies Used
 
+### Backend
 - Python
 - Flask
 - MySQL
-- HTML/CSS
+
+### AI / NLP
+- Scikit-learn
+- TF-IDF Vectorizer
+- Cosine Similarity
+
+### Frontend
+- HTML
+- CSS
+- Jinja2
+
+### Other Libraries
 - PyPDF2
-- Git & GitHub
-
-## 📊 Project Progress
-
-- [x] Flask project setup
-- [x] Virtual environment setup
-- [x] MySQL database connection
-- [x] User registration
-- [x] User login/logout
-- [x] PDF resume upload
-- [x] Resume text extraction
-- [x] Basic skill matching
-- [x] Job description input
-- [x] Match result page
-- [x] Save analysis results to MySQL
-- [x] Previous results dashboard
-- [ ] Improve AI matching
-- [ ] Final UI
-- [ ] Deployment
+- mysql-connector-python
+- python-dotenv
+- Werkzeug
 
 ## ▶️ Run Locally
 
