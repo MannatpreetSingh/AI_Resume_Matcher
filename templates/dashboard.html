@@ -4,87 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-            body{
-                font-family: Arial, Helvetica, sans-serif;
-                max-width: 900px;
-                padding: 20px;
-                margin: 40px auto;
-            }
-            .result-card{
-                border: 1px solid #ccc;
-                padding: auto;
-                margin: 20px 0;
-            }
-            .match{
-                font-size: 24px;
-                font-weight: bold;
-            }
-            .skills{
-                margin-top: 10px;
-            }
-            a {
-                    text-decoration: dotted;
-            }
-    </style>
+
+    <title>Dashboard | AI Resume Matcher</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=3">
 </head>
 
 <body>
-    <h1>
-        Welcome, {{ name }}!
-    </h1>
-    <p>
-        your are logged in !
-    </p>
-    <br>
-    <a href="{{ url_for('upload') }}">Upload Resume</a>
-    <br><br>
-    <h2>Previous Results</h2>
-  {% if results %}
-        {% for result in results %}
-    <div class="result-card">
-        <div class="match">
-        <h3>
-            Match : {{result.match_percentage }} %
-        </h3>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            AI Resume Matcher
         </div>
-        <p>
-            <strong>Job Description:</strong>
-            {{ result.job_description }}
-        </p>
-           <div class="skills">
-        <p>
-            <strong>Matched Skills:</strong>
-            {{ result.matched_skills }}
-        </p>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('upload') }}">
+                Analyze Resume
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                Logout
+            </a>
+
         </div>
-            <div class="skills">
-        <p>
-            <strong>Missing Skills:</strong>
-            {{ result.missing_skills }}
-        </p>
+
+    </nav>
+
+    <main class="container">
+
+        <section class="dashboard-header">
+
+            <div>
+                <h1>Welcome, {{ name }}! 👋</h1>
+
+                <p>
+                    Analyze your resume and discover how well
+                    it matches your target job.
+                </p>
             </div>
 
-        <p>
-            <strong>Date:</strong>
-            {{ result.created_at }}
-        </p>
+            <div>
+                <a href="{{ url_for('upload') }}" class="btn btn-primary">
+                    + Analyze Resume
+                </a>
+            </div>
 
-        <hr>
-    </div>
-    {% endfor %}
+        </section>
 
-    {% else %}
+        <section class="card">
 
-    <p>You don't have any previous results.</p>
+            <h2>Previous Results</h2>
 
-    {% endif %}
+            {% if results %}
 
-    <br>
+                {% for result in results %}
 
+                    <div class="result-card">
 
-    <a href="{{ url_for('logout') }}">Logout</a>
+                        <div class="result-score">
+                            Match: {{ result.match_percentage }}%
+                        </div>
+
+                        <h3>Matched Skills</h3>
+
+                        {% if result.matched_skills %}
+
+                            <ul class="skill-list">
+
+                                {% for skill in result.matched_skills.split(', ') %}
+
+                                    <li class="skill">
+                                        {{ skill }}
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        {% else %}
+
+                            <p>No matching skills found.</p>
+
+                        {% endif %}
+
+                        <h3>Missing Skills</h3>
+
+                        {% if result.missing_skills %}
+
+                            <ul class="skill-list">
+
+                                {% for skill in result.missing_skills.split(', ') %}
+
+                                    <li class="missing-skill">
+                                        {{ skill }}
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        {% else %}
+
+                            <p>No missing skills! 🎉</p>
+
+                        {% endif %}
+
+                        <h3>Job Description</h3>
+
+                        <p>
+                            {{ result.job_description }}
+                        </p>
+
+                        <h3>Date</h3>
+
+                        <p>
+                            {{ result.created_at }}
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    You don't have any previous results yet.
+                </p>
+
+                <br>
+
+                <a href="{{ url_for('upload') }}" class="btn btn-primary">
+                    Analyze Your First Resume
+                </a>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
 </body>
 
 </html>
