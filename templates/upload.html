@@ -1,31 +1,94 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Resume</title>
+
+<title>Analyze Resume | AI Resume Matcher</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
 </head>
 
 <body>
-    <h1>
-        Upload Your Resume
-    </h1>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Select Resume (PDF:)</label>
-        <br><br>
-        <input type="file" name="resume" accept=".pdf" required>
-        <br><br>
-        <label>Job Description:</label>
-        <br><br>
 
-        <textarea name="job_description" rows="12" cols="60" placeholder="Paste the job description here..."
-            required></textarea>
+<nav class="navbar">
 
-        <br><br>
-        <button type="submit">analyse Resume</button><br><br>
-    </form>
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    <div class="logo">
+        AI Resume Matcher
+    </div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Analyze Resume</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <section class="card">
+
+        <h1>Upload Your Resume 📄</h1>
+
+        <p>
+            Upload your resume and paste a job description
+            to see how well they match.
+        </p>
+
+        <br>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <label>
+                <strong>Select Resume (PDF)</strong>
+            </label>
+
+            <br><br>
+
+            <input
+                type="file"
+                name="resume"
+                accept=".pdf"
+                required
+            >
+
+            <br><br><br>
+
+            <label>
+                <strong>Job Description</strong>
+            </label>
+
+            <br><br>
+
+            <textarea
+                name="job_description"
+                rows="12"
+                style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: Arial;"
+                placeholder="Paste the job description here..."
+                required
+            ></textarea>
+
+            <br><br>
+
+            <button type="submit" class="btn btn-primary">
+                Analyze Resume
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+
+    </section>
+
+</main>
+
 </body>
-
 </html>

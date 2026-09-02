@@ -1,84 +1,146 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 
 <head>
-    <title>Match Result</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Result | AI Resume Matcher</title>
 
-        .match-box {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=7">
 
-        .skills {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        li {
-            margin: 8px 0;
-        }
-    </style>
 </head>
 
 <body>
+<nav class="navbar">
 
-    <h1>Resume Match Result</h1>
-    <div class="match-box">
-        <h2>
-            Match Percentage:
-            {{ result.match_percentage }}%
-        </h2>
+    <div class="logo">
+        AI Resume Matcher
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('upload') }}">
+            Analyze Resume
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <section class="result-page-header">
+
+        <h1>Resume Match Result 🎯</h1>
 
         <p>
-            This score represents how well your resume skills  matches
-            the job description.
+            Here's how well your resume matches the selected job.
         </p>
-    </div>
 
-    <div class="skills">
-        <h3>Matched Skills</h3>
+    </section>
+
+    <section class="match-result-card">
+
+        <div class="score-label">
+            Your Resume Match
+        </div>
+
+        <div class="big-score">
+            {{ result.match_percentage }}%
+        </div>
+
+        <p class="score-description">
+            This score represents how well your resume skills
+            match the job description.
+        </p>
+
+    </section>
+
+    <section class="skills-card">
+
+        <div class="section-title matched-title">
+            <span>✓</span>
+            <h2>Matched Skills</h2>
+        </div>
 
         {% if result.matched_skills %}
-        <ul>
-            {% for skill in result.matched_skills %}
-            <li>{{ skill }}</li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No matching skills found.</p>
-        {% endif %}
-    </div>
 
-    <div class="skills">
-        <h3>Missing Skills</h3>
+        <div class="result-skill-list">
+
+            {% for skill in result.matched_skills %}
+
+            <span class="result-skill matched-skill">
+                ✓ {{ skill }}
+            </span>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <p class="empty-message">
+            No matching skills found.
+        </p>
+
+        {% endif %}
+
+    </section>
+
+    <section class="skills-card">
+
+        <div class="section-title missing-title">
+            <span>!</span>
+            <h2>Missing Skills</h2>
+        </div>
 
         {% if result.missing_skills %}
-        <ul>
+
+        <div class="result-skill-list">
+
             {% for skill in result.missing_skills %}
-            <li>{{ skill }}</li>
+
+            <span class="result-skill missing-result-skill">
+                + {{ skill }}
+            </span>
+
             {% endfor %}
-        </ul>
+
+        </div>
+
         {% else %}
-        <p>No missing skills! </p>
+
+        <p class="success-message">
+            No missing skills! 🎉
+        </p>
+
         {% endif %}
+
+    </section>
+
+    <div class="result-actions">
+
+        <a href="{{ url_for('upload') }}" class="btn btn-primary">
+            Analyze Another Resume
+        </a>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+
     </div>
-    <br>
 
-    <a href="{{ url_for('upload') }}">Analyze Another Resume</a>
-
-    <br><br>
-
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</main>
 
 </body>
 
